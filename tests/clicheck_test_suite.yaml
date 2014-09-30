@@ -2,6 +2,7 @@
 ---
 - name: too_few_arguments
   command: "clicheck"
+  # stdout or stderr or both can be defined if necessary
   stderr: ["tests/too_few_arguments.txt"]
 
 - name: display_help
@@ -10,9 +11,12 @@
 
 - name: sleep_1s
   command: "sleep 1"
+  # default is "" for both stdout and stderr
 
 - name: check_test_suite_not_found 
   command: "clicheck -u tests/dummy.yaml check"
+  # stdout and stderr can be either a plain string or a list of files
+  # that contain the text dump of the command
   stdout: "Error: test suite file 'tests/dummy.yaml' not found.\n"
 
 - name: test_suite_with_yaml_error

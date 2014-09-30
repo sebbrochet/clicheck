@@ -11,13 +11,13 @@ Requirements
 
 Installation:
 -------------
-* Clone repository
+* Clone repository    
 `git clone https://github.com/sebbrochet/clicheck.git`
-* cd into project directory
+* cd into project directory    
 `cd clicheck`
-* Install requirements with pip
+* Install requirements with pip    
 `pip install -r requirements.txt`
-* Install clicheck binary
+* Install clicheck binary    
 `python setup.py install`
 
 Usage:
@@ -47,7 +47,7 @@ optional arguments:
 ```
 
 A test suite is described as a list of test defined in YAML format.    
-You may have a look on clicheck own acceptance tests made using clicheck (now that's meta!).    
+You may have a look on [clicheck own acceptance tests](https://github.com/sebbrochet/clicheck/blob/master/tests/clicheck_test_suite.yaml) made using clicheck (now that's meta!).    
 
 IMPLEMENTED:
 ------
