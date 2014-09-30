@@ -1,0 +1,4 @@
+usage: clicheck [-h] [-s SCOPE] [-t TEST] [-u SUITE] [-w WAIT] [-c CONFIG]
+                [-v]
+                command
+clicheck: error: too few arguments

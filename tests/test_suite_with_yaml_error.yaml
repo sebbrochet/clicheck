@@ -1,0 +1,9 @@
+# clicheck own test suite, how meta!
+---
+- name: display_help
+  command: "clicheck -h"
+  ref_as_file: "tests/display_help.txt"
+
+- name: check_missing_command 
+  command: "clicheck"
+  ref_as_file_list: "tests/check_missing_command.txt"] 

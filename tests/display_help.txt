@@ -1,0 +1,20 @@
+usage: clicheck [-h] [-s SCOPE] [-t TEST] [-u SUITE] [-w WAIT] [-c CONFIG]
+                [-v]
+                command
+
+CLI acceptance testing based on output comparison.
+
+positional arguments:
+  command               Command to execute (check, run)
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -s SCOPE, --scope SCOPE
+                        Limit command to act on scope defined in a file
+  -t TEST, --test TEST  Specify the name of a specific test to test
+  -u SUITE, --suite SUITE
+                        Specify the name of the test suite to test
+  -w WAIT, --wait WAIT  Time to wait in seconds between tests (default is 0)
+  -c CONFIG, --config CONFIG
+                        Configuration file to use
+  -v, --version         Print program version and exit.

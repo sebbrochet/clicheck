@@ -1,0 +1,2 @@
+2 tests found
+Test suite configuration OK

@@ -1,0 +1,6 @@
+Error: test suite configuration not OK
+Error while interpreting test suite configuration: tests/test_suite_with_yaml_error.yaml
+Exception: while parsing a block mapping
+  in "tests/test_suite_with_yaml_error.yaml", line 7, column 3
+expected <block end>, but found ']'
+  in "tests/test_suite_with_yaml_error.yaml", line 9, column 54

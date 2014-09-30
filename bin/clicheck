@@ -1,0 +1,115 @@
+#!/usr/bin/env python
+
+from clicheck.commands import check_test_suite, run_test_suite
+
+COMMAND_DISPATCHER = {
+    "check": check_test_suite,
+    "run":  run_test_suite,
+}
+
+DEFAULT_WAIT = 0
+
+def get_command_and_check_args(args):
+    import os
+
+    args_ok = True
+
+    if args.scope and not os.path.exists(args.scope):
+        print "Error: scope file '%s' not found." % args.scope
+        args_ok = False
+   
+    if args.suite and not os.path.exists(args.suite):
+        print "Error: test suite file '%s' not found." % args.suite
+        args_ok = False
+
+    if args.config and not os.path.exists(args.config):
+        print "Error: config file '%s' not found." % args.config
+        args_ok = False
+ 
+
+    if args.wait < 0:
+        print "Error: wait should be a positive number."
+        args_ok = False
+ 
+    command = args.command.lower()
+    command_proc = COMMAND_DISPATCHER.get(command, None)
+
+    if not command_proc:
+        print 'Error: command "%s" is unknown, please refer to help for the list of allowed commands.' % args.command
+        args_ok = False
+
+    return args_ok, command_proc
+
+class ArgsWithConfig(object):
+    pass
+
+def conf_get_IFP(config, section, option, default):
+    if config.has_option(section, option):
+        return config.get(section, option)
+    else:
+        return default
+
+def conf_get_IFP_int(config, section, option, default):
+    if config.has_option(section, option):
+        return config.getint(section, option)
+    else:
+        return default
+
+def get_args_with_config_IFN(args):
+    args_with_config = ArgsWithConfig()
+
+    import os
+
+    if args.config and os.path.exists(args.config):
+        DUMMY_SECTION = '__global__'
+        import ConfigParser
+        import StringIO
+        ini_str = '[%s]\n' % DUMMY_SECTION  + open(args.config, 'r').read()
+        ini_fp = StringIO.StringIO(ini_str)
+        config = ConfigParser.RawConfigParser()
+        config.readfp(ini_fp)
+
+        def update_args_with_ini_IFN(option, option_type = str):
+            if config.has_option(DUMMY_SECTION, option):
+               if option_type == str:
+                       setattr(args_with_config, option, config.get(DUMMY_SECTION, option))
+               elif option_type == int:
+                       setattr(args_with_config, option, config.getint(DUMMY_SECTION, option))
+               else:
+                   raise Exception("Type not supported %s" % option_type)
+
+        update_args_with_ini_IFN('scope')
+        update_args_with_ini_IFN('test')
+        update_args_with_ini_IFN('suite')
+        update_args_with_ini_IFN('wait', int)
+
+    return args_with_config
+        
+def main():
+    from clicheck import __version__
+    import argparse
+
+    parser = argparse.ArgumentParser(description='CLI acceptance testing based on output comparison.',
+                                     formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser.add_argument('command',          type=str, help="Command to execute (%s)" % ", ".join(sorted(COMMAND_DISPATCHER.keys())))
+    parser.add_argument('-s', '--scope',    type=str, default='', help="Limit command to act on scope defined in a file")
+    parser.add_argument('-t', '--test',   type=str, default='', help="Specify the name of a specific test to test")
+    parser.add_argument('-u', '--suite',   type=str, help="Specify the name of the test suite to test")
+    parser.add_argument('-w', '--wait',     type=int, default=DEFAULT_WAIT, help='Time to wait in seconds between tests (default is %d)'% DEFAULT_WAIT)
+    parser.add_argument('-c', '--config',   type=str, default='', help="Configuration file to use")
+    parser.add_argument('-v', '--version', action='version', help="Print program version and exit.", version="%s %s" % ("%(prog)s", __version__))
+
+
+    args = parser.parse_args()
+
+    args_with_config = get_args_with_config_IFN(args)
+    
+    parser.parse_args(namespace = args_with_config)
+
+    args_ok, command_proc = get_command_and_check_args(args_with_config)
+    
+    if args_ok and command_proc:
+        command_proc(args_with_config)
+
+if __name__ == '__main__':
+    main()

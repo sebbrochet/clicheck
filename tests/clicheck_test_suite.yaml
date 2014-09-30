@@ -1,0 +1,28 @@
+# clicheck own test suite, how meta!
+---
+- name: too_few_arguments
+  command: "clicheck"
+  stderr: ["tests/too_few_arguments.txt"]
+
+- name: display_help
+  command: "clicheck -h"
+  stdout: ["tests/display_help.txt"]
+
+- name: sleep_1s
+  command: "sleep 1"
+
+- name: check_test_suite_not_found 
+  command: "clicheck -u tests/dummy.yaml check"
+  stdout: "Error: test suite file 'tests/dummy.yaml' not found.\n"
+
+- name: test_suite_with_yaml_error
+  command: "clicheck -u tests/test_suite_with_yaml_error.yaml check"
+  stdout: ["tests/test_suite_with_yaml_error.txt"]
+
+- name: check_test_suite 
+  command: "clicheck -u tests/my_test_suite.yaml check"
+  stdout: ["tests/check_test_suite.txt"]
+
+- name: run_test_suite
+  command: "clicheck -u tests/my_test_suite.yaml run"
+  stdout: ["tests/run_test_suite.txt"] 
