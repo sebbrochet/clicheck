@@ -110,7 +110,7 @@ def main():
     parser.parse_args(namespace = args_with_config)
 
     args_ok, command_proc = get_command_and_check_args(args_with_config)
-    
+   
     if args_ok and command_proc:
         command_proc(args_with_config)
 

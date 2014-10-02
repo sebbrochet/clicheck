@@ -92,16 +92,52 @@ def run_test(test):
 
     return is_test_run_ok, command_stdout, stdout_reference, command_stderr, stderr_reference
 
-def load_test_suite(filename):
+def get_tests(scope, test):
+    tests = []
+    
+    if test:
+        tests.append(test)
+
+    if scope:
+        f = file(scope, "r")
+        lines = f.read().split('\n')
+        for line in lines:
+            if line.startswith('#'):
+                continue
+            
+            value = line.strip()
+
+            if value:
+                tests.append(value)
+
+    return tests
+
+def load_test_suite(args):
+    tests = get_tests(args.scope, args.test)
+
     import yaml
 
     is_ok = True
-    test_suite = None
+    test_suite = []
     error = ""
+    filename = args.suite
 
     f = file(filename, "r")
     try:
-        test_suite = yaml.load(f)
+        obj = yaml.load(f)
+
+        if not type(obj) is list:
+            error = "Test suite configuration should be a list of test"
+            is_ok = False
+        else:
+            for test in obj:
+                if tests:
+                    test_name = test.get('name')
+                    if test_name and test_name in tests:
+                        test_suite.append(test)
+                else:
+                    test_suite.append(test)
+                     
     except Exception, e:
         error = "Error while interpreting test suite configuration: %s\nException: %s" % (filename, e)
         is_ok = False
@@ -119,7 +155,7 @@ def run_test_suite(args):
 
     import time
 
-    is_yaml_ok, test_suite, error = load_test_suite(args.suite)
+    is_yaml_ok, test_suite, error = load_test_suite(args)
 
     print "%d tests to be done" % len(test_suite)
     print "Starting tests..."
@@ -158,30 +194,27 @@ def run_test_suite(args):
 
 
 def check_test_suite(args):
-    is_yaml_ok, test_suite, error = load_test_suite(args.suite)
+    is_yaml_ok, test_suite, error = load_test_suite(args)
 
     if is_yaml_ok:
         is_test_suite_ok = True
 
-        if type(test_suite) is list:
-            missing_reference_files_for_suite = []
-            command = ""
-            current_test = None
-            for test in test_suite:
-                is_test_ok, command, missing_reference_files_for_test  = check_test(test)
+        missing_reference_files_for_suite = []
+        command = ""
+        current_test = None
+        for test in test_suite:
+            is_test_ok, command, missing_reference_files_for_test  = check_test(test)
 
-                if not is_test_ok:
-                    is_test_suite_ok = False
-                    missing_reference_files_for_suite.extend(missing_reference_files_for_test)
-                    current_test = test
-            if not is_test_suite_ok: 
-                if not command:
-                    test_name = current_test.get("name") or current_test.get("command") 
-                    error = "Missing 'command' parameter in test: %s" % test_name 
-                else:
-                    error = "Missing reference files:\n%s" % "\n".join(missing_reference_files_for_suite)
-        else:
-            error = "Test suite configuration should be a list of test"
+            if not is_test_ok:
+                is_test_suite_ok = False
+                missing_reference_files_for_suite.extend(missing_reference_files_for_test)
+                current_test = test
+        if not is_test_suite_ok: 
+            if not command:
+                test_name = current_test.get("name") or current_test.get("command") 
+                error = "Missing 'command' parameter in test: %s" % test_name 
+            else:
+                error = "Missing reference files:\n%s" % "\n".join(missing_reference_files_for_suite)
 
     is_ok = is_yaml_ok and is_test_suite_ok
 

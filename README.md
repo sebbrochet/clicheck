@@ -49,7 +49,7 @@ optional arguments:
 A test suite is described as a list of test defined in YAML format.    
 You may have a look on [clicheck own acceptance tests](https://github.com/sebbrochet/clicheck/blob/master/tests/clicheck_test_suite.yaml) made using clicheck (now that's meta!).    
 
-`config` format is one argument by line (i.e argname=value), argument names are the same ones than the CLI (scope, user, password, ...).
+`config` format is one argument by line (i.e argname=value), argument names are the same ones than the CLI (scope, test, suite, wait).
 A line starting with a `#` is considered as comment and won't be interpreted.
 Don't put quotes between argument values
 

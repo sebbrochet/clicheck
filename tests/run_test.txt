@@ -1,0 +1,5 @@
+1 tests found
+Test suite configuration OK
+1 tests to be done
+Starting tests...
+display_help : OK
