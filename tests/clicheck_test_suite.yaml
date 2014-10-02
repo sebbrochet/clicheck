@@ -1,32 +1,50 @@
 # clicheck own test suite, how meta!
 ---
-- name: too_few_arguments
-  command: "clicheck"
-  # stdout or stderr or both can be defined if necessary
-  stderr: ["tests/too_few_arguments.txt"]
+# Minimal test is a command
+# default is "" for both 'stdout' and 'stderr' parameters
+# stdout and stderr can be either a plain string or a list of files
+# that contain the text dump of the command
+- command: sleep 0
 
-- name: display_help
-  command: "clicheck -h"
-  stdout: ["tests/display_help.txt"]
-
+# Tests may have a name for documentation and use in scope or --test option
 - name: sleep_1s
   command: "sleep 1"
-  # default is "" for both stdout and stderr
+
+# Tests to check error handling
+- name: too_few_arguments
+  command: "clicheck"
+  stderr: ["tests/too_few_arguments.txt"]
+
+- name: missing_test_suite_arg
+  command: "clicheck check"
+  stdout: "Error: test suite file not defined.\n"
 
 - name: check_test_suite_not_found 
   command: "clicheck -u tests/dummy.yaml check"
-  # stdout and stderr can be either a plain string or a list of files
-  # that contain the text dump of the command
   stdout: "Error: test suite file 'tests/dummy.yaml' not found.\n"
 
 - name: test_suite_with_yaml_error
   command: "clicheck -u tests/test_suite_with_yaml_error.yaml check"
   stdout: ["tests/test_suite_with_yaml_error.txt"]
 
-- name: check_test_suite 
+- name: command_not_found
+  command: "kmkkmk"
+  stderr: "Command to launch not found!"
+
+- name: test_suite_with_missing_command
+  command: "clicheck -u tests/test_suite_missing_command.yaml check"
+  stdout: "1 tests found\nError: test suite configuration not OK\nMissing 'command' parameter in test: missing_command_parameter_in_test\n"
+
+# ---
+- name: display_help
+  command: "clicheck -h"
+  stdout: ["tests/display_help.txt"]
+
+- name: check_test_suite
   command: "clicheck -u tests/my_test_suite.yaml check"
   stdout: ["tests/check_test_suite.txt"]
 
 - name: run_test_suite
   command: "clicheck -u tests/my_test_suite.yaml run"
-  stdout: ["tests/run_test_suite.txt"] 
+  stdout: ["tests/run_test_suite.txt"]
+

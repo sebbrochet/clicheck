@@ -4,16 +4,13 @@
 import subprocess
 
 def run_command(*popenargs, **kwargs):
-    process = subprocess.Popen(stdout=subprocess.PIPE, stderr=subprocess.PIPE, *popenargs, **kwargs)
-    stdoutdata, stderrdata = process.communicate()
-    retcode = process.poll()
-    #if retcode:
-    #    cmd = kwargs.get("args")
-    #    if cmd is None:
-    #        cmd = popenargs[0]
-    #    error = subprocess.CalledProcessError(retcode, cmd)
-    #    error.output = stdoutdata
-    #    raise error
+    try:
+        process = subprocess.Popen(stdout=subprocess.PIPE, stderr=subprocess.PIPE, *popenargs, **kwargs)
+        stdoutdata, stderrdata = process.communicate()
+    except OSError, e:
+        stdoutdata = ""
+        stderrdata = "Command to launch not found!"
+    
     return stdoutdata, stderrdata
 
 def check_test(test):
@@ -39,12 +36,14 @@ def check_test(test):
     if type(stderr) is list:
         is_ok_stderr, missing_stderr_files = check_files_exist(stderr) 
 
-    is_test_ok = is_ok_stdout and is_ok_stderr
+    command = test.get("command", "")
+
+    is_test_ok = command and is_ok_stdout and is_ok_stderr
     missing_reference_files = []
     missing_reference_files.extend(missing_stdout_files)
     missing_reference_files.extend(missing_stderr_files)
 
-    return is_test_ok, missing_reference_files
+    return is_test_ok, command, missing_reference_files
 
 
 def run_test(test):
@@ -80,8 +79,8 @@ def run_test(test):
     else:
         assert(False)
 
-    #command_stdout = ""
-    #command_stderr = ""
+    command_stdout = ""
+    command_stderr = ""
 
     try:
         command_as_list = [x.strip() for x in command_with_args.split(" ") if x.strip()]
@@ -89,7 +88,7 @@ def run_test(test):
         is_test_run_ok = command_stdout in stdout_reference and command_stderr in stderr_reference
     except subprocess.CalledProcessError, e:
        is_test_run_ok = False
-       #print "Exception %s" % e
+       command_stderr = "Exception %s" % e
 
     return is_test_run_ok, command_stdout, stdout_reference, command_stderr, stderr_reference
 
@@ -166,14 +165,21 @@ def check_test_suite(args):
 
         if type(test_suite) is list:
             missing_reference_files_for_suite = []
+            command = ""
+            current_test = None
             for test in test_suite:
-                is_test_ok, missing_reference_files_for_test  = check_test(test)
+                is_test_ok, command, missing_reference_files_for_test  = check_test(test)
 
                 if not is_test_ok:
                     is_test_suite_ok = False
                     missing_reference_files_for_suite.extend(missing_reference_files_for_test)
+                    current_test = test
             if not is_test_suite_ok: 
-                error = "Missing reference files:\n%s" % "\n".join(missing_reference_files_for_suite)
+                if not command:
+                    test_name = current_test.get("name") or current_test.get("command") 
+                    error = "Missing 'command' parameter in test: %s" % test_name 
+                else:
+                    error = "Missing reference files:\n%s" % "\n".join(missing_reference_files_for_suite)
         else:
             error = "Test suite configuration should be a list of test"
 

@@ -1,0 +1,3 @@
+# test suite with missing comand parameter in test
+---
+- name: missing_command_parameter_in_test
