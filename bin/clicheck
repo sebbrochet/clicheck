@@ -22,16 +22,16 @@ def get_command_and_check_args(args):
         print "Error: test suite file '%s' not found." % args.suite
         args_ok = False
 
-    if not args.suite:
-        print "Error: test suite file not defined."
-        args_ok = False
-
     if args.config and not os.path.exists(args.config):
         print "Error: config file '%s' not found." % args.config
         args_ok = False
  
     if args.wait < 0:
         print "Error: wait should be a positive number."
+        args_ok = False
+
+    if not args.suite:
+        print "Error: test suite file not defined."
         args_ok = False
  
     command = args.command.lower()
