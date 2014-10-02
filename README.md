@@ -58,9 +58,13 @@ IMPLEMENTED:
 * check and run command
 * --suite option
 * --config option
+* --scope option
+* --test option
 
 TODO:
 ------
-* Implement --scope option
-* Implement --test option
-* Implement --wait option (or add addionnal wait parameter in test configuration?)
+* Implement --wait option and add addionnal wait parameter in test configuration
+
+TESTS:
+------
+* `clicheck -u tests/clicheck_test_suite.yaml run`
