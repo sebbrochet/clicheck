@@ -69,7 +69,7 @@ TEST DEFINITION:
     <td>stdout</td><td>no</td><td>""</td><td>string or list of strings</td><td>Text pattern or list of filenames with text patterns for comparison against STDOUT of command</td>
   </tr>
   <tr>
-    <td>stderr</td><td>no</td><td>""</td><td>string or list of strings</td><td>string or list of strings</td><td>Text pattern or list of filenames with text patterns for comparison against STDERR of command</td>
+    <td>stderr</td><td>no</td><td>""</td><td>string or list of strings</td><td>Text pattern or list of filenames with text patterns for comparison against STDERR of command</td>
   </tr>
   <tr>
     <td>wait</td><td>no</td><td>0</td><td>positive int</td><td>Number of seconds to wait after test execution</td>
