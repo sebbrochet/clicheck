@@ -1,0 +1,9 @@
+---
+- name: echo_Hello
+  command: echo Hello
+  stdout: "Hello\n"
+  wait: 2
+
+- name: display_help
+  command: "clicheck -h"
+  stdout: ["tests/display_help.txt"]

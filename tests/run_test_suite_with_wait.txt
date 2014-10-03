@@ -1,0 +1,7 @@
+2 tests found
+Test suite configuration OK
+2 tests to be done
+Starting tests...
+echo_Hello : OK
+Waiting 2 seconds...
+display_help : OK

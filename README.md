@@ -53,17 +53,28 @@ You may have a look on [clicheck own acceptance tests](https://github.com/sebbro
 A line starting with a `#` is considered as comment and won't be interpreted.
 Don't put quotes between argument values
 
-IMPLEMENTED:
+TEST DEFINITION:
 ------
-* check and run command
-* --suite option
-* --config option
-* --scope option
-* --test option
-
-TODO:
-------
-* Implement --wait option and add addionnal wait parameter in test configuration
+<table>
+  <tr>
+    <th>Parameter</th><th>required</th><th>default</th><th>type</th><th>comments</th>
+  </tr>
+  <tr>
+    <td>name</td><td>no</td><td>""</td><td>string</td><td>name of the test for documentation purpose or use with --scope or --test options</td>
+  </tr>
+  <tr>
+    <td>command</td><td>yes</td><td></td><td>string</td><td>full command with arguments to execute</td>
+  </tr>
+  <tr>
+    <td>stdout</td><td>no</td><td>""</td><td>string or list of strings</td><td>Text pattern or list of filenames with text patterns for comparison against STDOUT of command</td>
+  </tr>
+  <tr>
+    <td>stderr</td><td>no</td><td>""</td><td>string or list of strings</td><td>string or list of strings</td><td>Text pattern or list of filenames with text patterns for comparison against STDERR of command</td>
+  </tr>
+  <tr>
+    <td>wait</td><td>no</td><td>0</td><td>positive int</td><td>Number of seconds to wait after test execution</td>
+  </tr>
+</table>
 
 TESTS:
 ------

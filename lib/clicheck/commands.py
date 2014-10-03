@@ -37,13 +37,15 @@ def check_test(test):
         is_ok_stderr, missing_stderr_files = check_files_exist(stderr) 
 
     command = test.get("command", "")
+    wait = test.get("wait", 0)
 
-    is_test_ok = command and is_ok_stdout and is_ok_stderr
+    is_test_ok = command and type(wait) is int and wait >= 0 and is_ok_stdout and is_ok_stderr
+
     missing_reference_files = []
     missing_reference_files.extend(missing_stdout_files)
     missing_reference_files.extend(missing_stderr_files)
 
-    return is_test_ok, command, missing_reference_files
+    return is_test_ok, command, wait, missing_reference_files
 
 
 def run_test(test):
@@ -174,9 +176,6 @@ def run_test_suite(args):
 
         if is_test_run_ok:
             print "OK" 
-            #if wait:
-            #    print "Waiting %d secondes..." % wait
-            #    time.sleep(wait)
         else:
             print "NOK"
             if not command_stdout in stdout_reference: 
@@ -192,29 +191,37 @@ def run_test_suite(args):
                 print "Reference is:"
                 print stderr_reference
 
+        wait = test.get("wait", 0) or args.wait
+
+        if wait:
+            print "Waiting %d seconds..." % wait
+            time.sleep(wait)
 
 def check_test_suite(args):
     is_yaml_ok, test_suite, error = load_test_suite(args)
 
-    if is_yaml_ok:
-        is_test_suite_ok = True
+    is_test_suite_ok = True
+    errors = []
 
-        missing_reference_files_for_suite = []
-        command = ""
-        current_test = None
+    if is_yaml_ok:
         for test in test_suite:
-            is_test_ok, command, missing_reference_files_for_test  = check_test(test)
+            is_test_ok, command, wait, missing_reference_files_for_test  = check_test(test)
 
             if not is_test_ok:
                 is_test_suite_ok = False
-                missing_reference_files_for_suite.extend(missing_reference_files_for_test)
-                current_test = test
-        if not is_test_suite_ok: 
-            if not command:
-                test_name = current_test.get("name") or current_test.get("command") 
-                error = "Missing 'command' parameter in test: %s" % test_name 
-            else:
-                error = "Missing reference files:\n%s" % "\n".join(missing_reference_files_for_suite)
+
+                if not command:
+                    test_name = test.get("name") or test.get("command") 
+                    error = "Missing 'command' parameter in test: %s" % test_name
+                elif not type(wait) is int or (type(wait) is int and wait < 0):
+                    test_name = test.get("name") or test.get("command")
+                    error = "wait parameter should be a positive number in test: %s" % test_name 
+                else:
+                    error = "Missing reference files:\n%s" % "\n".join(missing_reference_files_for_test)
+
+                errors.append(error)
+    else:
+        errors.append(error)
 
     is_ok = is_yaml_ok and is_test_suite_ok
 
@@ -225,6 +232,6 @@ def check_test_suite(args):
         if is_yaml_ok:
             print "%d tests found" % len(test_suite)
         print "Error: test suite configuration not OK"
-        print "%s" % error
+        print "%s" % "\n".join(errors)
 
     return is_ok

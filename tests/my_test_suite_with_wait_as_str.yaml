@@ -1,0 +1,8 @@
+---
+- name: test_with_wait_as_str
+  command: echo Hello
+  wait: "2"
+
+- name: test_with_wait_as_negative_int
+  command: echo Hello
+  wait: -2

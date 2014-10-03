@@ -1,0 +1,4 @@
+2 tests found
+Error: test suite configuration not OK
+wait parameter should be a positive number in test: test_with_wait_as_str
+wait parameter should be a positive number in test: test_with_wait_as_negative_int

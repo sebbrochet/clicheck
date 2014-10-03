@@ -1,3 +1,9 @@
 # test suite with missing comand parameter in test
 ---
+- name: echo
+  command: echo
+
 - name: missing_command_parameter_in_test
+
+- name: echo
+  command: echo
