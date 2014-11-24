@@ -3,6 +3,7 @@ clicheck
 
 [![Circle CI](https://circleci.com/gh/sebbrochet/clicheck.svg?style=svg)](https://circleci.com/gh/sebbrochet/clicheck)
 [![Build Status](https://travis-ci.org/sebbrochet/clicheck.svg?branch=master)](https://travis-ci.org/sebbrochet/clicheck)
+[![Build Status](https://drone.io/github.com/sebbrochet/clicheck/status.png)](https://drone.io/github.com/sebbrochet/clicheck/latest)
 
 CLI acceptance testing based on output comparison
 
