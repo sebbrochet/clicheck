@@ -1,0 +1,3 @@
+test:
+  override:
+    - clicheck -u tests/clicheck_test_suite.yaml run
