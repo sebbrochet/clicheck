@@ -8,7 +8,7 @@ CLI acceptance testing based on output comparison
 
 Requirements
 * linux box
-* Python 2.6 or higher
+* Python 2.6, 2.7 (python 3.x not supported)
 * [argparse](https://docs.python.org/3/library/argparse.html) library
 * [pyyaml](http://pyyaml.org/) library
 
