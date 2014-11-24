@@ -1,6 +1,8 @@
 clicheck
 ========
 
+[![Circle CI](https://circleci.com/gh/sebbrochet/clicheck.svg?style=svg)](https://circleci.com/gh/sebbrochet/clicheck)
+
 CLI acceptance testing based on output comparison
 
 Requirements
