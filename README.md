@@ -2,6 +2,7 @@ clicheck
 ========
 
 [![Circle CI](https://circleci.com/gh/sebbrochet/clicheck.svg?style=svg)](https://circleci.com/gh/sebbrochet/clicheck)
+[![Build Status](https://travis-ci.org/sebbrochet/clicheck.svg?branch=master)](https://travis-ci.org/sebbrochet/clicheck)
 
 CLI acceptance testing based on output comparison
 
