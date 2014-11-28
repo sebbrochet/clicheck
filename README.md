@@ -15,7 +15,10 @@ Requirements
 
 Installation:
 -------------
-* Clone repository    
+* Either using pip directly for last stable version      
+`pip install clicheck`
+
+* Or via github repository for latest version    
 `git clone https://github.com/sebbrochet/clicheck.git`
 * cd into project directory    
 `cd clicheck`
