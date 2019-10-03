@@ -17,7 +17,7 @@ setup(name='clicheck',
       platforms=['linux'],
       license='MIT License',
       install_requires=[
-          'pyyaml == 3.11',
+          'pyyaml == 5.1',
           'argparse == 1.2.1',
           'wsgiref == 0.1.2',
           ],
